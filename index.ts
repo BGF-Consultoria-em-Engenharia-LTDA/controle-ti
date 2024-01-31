@@ -1,13 +1,13 @@
 import {Hono, type Context} from 'https://deno.land/x/hono@v3.12.7/mod.ts'
 import {prettyJSON} from 'https://deno.land/x/hono/middleware.ts'
-import * as dotenv from "https://deno.land/std@0.213.0/dotenv/mod.ts"
+//import * as dotenv from "https://deno.land/std@0.213.0/dotenv/mod.ts"
 import {GoogleAPI} from "https://deno.land/x/google_deno_integration/mod.ts"
 
 const app = new Hono()
 app.use('*', prettyJSON())
-const ENV = await dotenv.load()
+//const ENV = await dotenv.load()
 const GoogleApi = new GoogleAPI({
-	email: ENV.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+	email: Deno.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
 	scope: [
 		"https://www.googleapis.com/auth/drive",
 		"https://www.googleapis.com/auth/drive.readonly",
@@ -15,24 +15,11 @@ const GoogleApi = new GoogleAPI({
 		"https://www.googleapis.com/auth/spreadsheets",
 		"https://www.googleapis.com/auth/spreadsheets.readonly"
 	],
-	key: ENV.GOOGLE_PRIVATE_KEY
+	key: Deno.env.GOOGLE_PRIVATE_KEY
 })
 
 app.post('/trelloCard', async (c: Context) => {
-	//const request = c.req.json()
-	const request = {
-		"Funcionário": "Arysson Menezes Da Silva",
-		"Tipo do problema/solicitação": "Solicitação de equipamento para auditoria",
-		"Prioridade": "2",
-		"Onde você se encontra?": "Escritório",
-		"Cliente:": "XYZ",
-		"Tablets:": ["9"],
-		"Elétrica": ["Analisador de Energia Embrasul", "Analisador de Energia Minipa", "Alicate Amperímetro", "Alicate Multímetro Fluke"],
-		"Civil": ["Boroscópio"],
-		"Mecânica": ["Detector de fuga de gás", "Manômetro Coluna D'Agua"],
-		"EPI'S": ["Óculos de Proteção"],
-		"Data e hora da Retirada": "2001-11-09 15:00"
-	}
+	const request = c.req.json()
 	
 	const call = {
 		employee: request["Funcionário"] || '',
@@ -95,7 +82,7 @@ app.get('/', (c: Context) => {
 Deno.serve(app.fetch)
 
 async function fetchApiTrello(path: string, body?, method = 'POST') {
-	const response = await fetch(`https://api.trello.com/1/${path}?key=${ENV.TRELLO_APIKEY}&token=${ENV.TRELLO_APITOKEN}`, {
+	const response = await fetch(`https://api.trello.com/1/${path}?key=${Deno.env.TRELLO_APIKEY}&token=${Deno.env.TRELLO_APITOKEN}`, {
 		method: method,
 		headers: {
 			'Accept': 'application/json',
@@ -125,7 +112,7 @@ async function createChecklist(cardId: string, checklist) {
 function createCardInfo(call) {
 	if (call.problem !== "Solicitação de equipamento para auditoria") {
 		return {
-			idList: ENV.TRELLO_IDLIST,
+			idList: Deno.env.TRELLO_IDLIST,
 			name: `${call.employee} - ${call.problem}`,
 			desc:
 				`## ${call.description}\n---\n` +
@@ -138,7 +125,7 @@ function createCardInfo(call) {
 	}
 	
 	return {
-		idList: ENV.TRELLO_IDLIST,
+		idList: Deno.env.TRELLO_IDLIST,
 		name: `${call.employee} - ${call.problem}`,
 		desc:
 			`## Cliente: **${call.client}**\n---\n` +
@@ -156,7 +143,7 @@ function createCardInfo(call) {
 }
 
 async function prepareCallSheet() {
-	return await GoogleApi.get(`https://sheets.googleapis.com/v4/spreadsheets/${ENV.SPREADSHEET_CALLS_ID}/values:batchGet?key=${ENV.GOOGLE_API_KEY}&ranges=k${ENV.SHEET_START_ROW}%3Aam${ENV.SHEET_END_ROW}`)
+	return await GoogleApi.get(`https://sheets.googleapis.com/v4/spreadsheets/${Deno.env.SPREADSHEET_CALLS_ID}/values:batchGet?key=${Deno.env.GOOGLE_API_KEY}&ranges=k${Deno.env.SHEET_START_ROW}%3Aam${Deno.env.SHEET_END_ROW}`)
 }
 
 async function changeCallStatus(sheet: Array<Array<string>>, desc, status) {
@@ -167,7 +154,7 @@ async function changeCallStatus(sheet: Array<Array<string>>, desc, status) {
 		
 		for (const [index, row] of sheet.entries()) {
 			if (row[2] === description) {
-				callRow = parseInt(ENV.SHEET_START_ROW) + index
+				callRow = parseInt(Deno.env.SHEET_START_ROW) + index
 			}
 		}
 	} else {
@@ -175,14 +162,14 @@ async function changeCallStatus(sheet: Array<Array<string>>, desc, status) {
 		
 		for (const [index, row] of sheet.entries()) {
 			if (row[25] === description) {
-				callRow = parseInt(ENV.SHEET_START_ROW) + index
+				callRow = parseInt(Deno.env.SHEET_START_ROW) + index
 			}
 		}
 	}
 	
 	if (callRow === -1) return false
 	
-	const res = await GoogleApi.post(`https://sheets.googleapis.com/v4/spreadsheets/${ENV.SPREADSHEET_CALLS_ID}/values:batchUpdate?key=${ENV.GOOGLE_API_KEY}`,
+	const res = await GoogleApi.post(`https://sheets.googleapis.com/v4/spreadsheets/${Deno.env.SPREADSHEET_CALLS_ID}/values:batchUpdate?key=${Deno.env.GOOGLE_API_KEY}`,
 		{
 			"data": [{
 				"values": [[status]],
