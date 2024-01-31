@@ -69,6 +69,7 @@ app
 		const CardTrello = await fetchApiTrello(`cards/${request.action.display.entities.card.id}`, null, 'GET')
 		
 		const Sheet = await prepareCallSheet()
+		console.log(Sheet)
 		const IsStatusChanged = await changeCallStatus(Sheet.valueRanges[0].values, CardTrello.desc, "Concluído")
 		if (IsStatusChanged === false) return c.text('Can not find the specified call in the sheet', 400)
 		
@@ -176,6 +177,8 @@ async function changeCallStatus(sheet: Array<Array<string>>, desc, status) {
 				"range": `AL${callRow}`
 			}], "valueInputOption": "USER_ENTERED"
 		})
+	
+	
 	
 	return true
 }
