@@ -1,0 +1,13 @@
+{
+  "tasks": {
+    "dev": "deno run --watch index.ts",
+    "build": "deno compile index.ts"
+  },
+  "imports": {
+    "hono": "https://deno.land/x/hono@v3.12.7/mod.ts",
+    "hono/middleware": "https://deno.land/x/hono@v3.12.7/middleware.ts",
+    "dotenv": "https://deno.land/std@0.213.0/dotenv/mod.ts",
+    "GoogleAPI": "https://deno.land/x/google_deno_integration/mod.ts",
+    "assertEquals": "https://deno.land/std@0.213.0/assert/mod.ts"
+  }
+}
