@@ -21,7 +21,7 @@ const GoogleApi = new GoogleAPI({
 console.log(`Account: ${Deno.env.get('GOOGLE_SERVICE_ACCOUNT_EMAIL')}\nPrivate Key: ${Deno.env.get('GOOGLE_PRIVATE_KEY')}\nSpreadsheet ID: ${Deno.env.get('SPREADSHEET_CALLS_ID')}\nAPI Key: ${Deno.env.get('GOOGLE_API_KEY')}`)
 
 app.post('/trelloCard', async (c: Context) => {
-	const request = c.req.json()
+	const request = await c.req.json()
 	
 	const call = {
 		employee: request["Funcionário"] || '',
