@@ -19,7 +19,7 @@ const GoogleApi = new GoogleAPI({
 })
 
 app.post('/trelloCard', async (c: Context) => {
-	const request = c.req.json()
+	const request = await c.req.json()
 	
 	const call = {
 		employee: request["Funcionário"] || '',
@@ -69,6 +69,7 @@ app
 		const CardTrello = await fetchApiTrello(`cards/${request.action.display.entities.card.id}`, null, 'GET')
 		
 		const Sheet = await prepareCallSheet()
+		console.log(Sheet)
 		const IsStatusChanged = await changeCallStatus(Sheet.valueRanges[0].values, CardTrello.desc, "Concluído")
 		if (IsStatusChanged === false) return c.text('Can not find the specified call in the sheet', 400)
 		
@@ -120,7 +121,8 @@ function createCardInfo(call) {
 				`**Tipo de problema:** ${call.problem}\n` +
 				`**Prioridade:** ${call.priority}\n` +
 				`**Local:** ${call.place}\n` +
-				`> *Arthur automatizações vrum vrum*`
+				`> *Arthur automatizações vrum vrum*`,
+			due: new Date().toISOString()
 		}
 	}
 	
