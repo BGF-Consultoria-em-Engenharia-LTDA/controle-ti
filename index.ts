@@ -18,8 +18,6 @@ const GoogleApi = new GoogleAPI({
 	key: Deno.env.get('GOOGLE_PRIVATE_KEY')
 })
 
-console.log(`Account: ${Deno.env.get('GOOGLE_SERVICE_ACCOUNT_EMAIL')}\nPrivate Key: ${Deno.env.get('GOOGLE_PRIVATE_KEY')}\nSpreadsheet ID: ${Deno.env.get('SPREADSHEET_CALLS_ID')}\nAPI Key: ${Deno.env.get('GOOGLE_API_KEY')}`)
-
 app.post('/trelloCard', async (c: Context) => {
 	const request = await c.req.json()
 	
@@ -123,7 +121,8 @@ function createCardInfo(call) {
 				`**Tipo de problema:** ${call.problem}\n` +
 				`**Prioridade:** ${call.priority}\n` +
 				`**Local:** ${call.place}\n` +
-				`> *Arthur automatizações vrum vrum*`
+				`> *Arthur automatizações vrum vrum*`,
+			due: new Date().toISOString()
 		}
 	}
 	
@@ -179,8 +178,6 @@ async function changeCallStatus(sheet: Array<Array<string>>, desc, status) {
 				"range": `AL${callRow}`
 			}], "valueInputOption": "USER_ENTERED"
 		})
-	
-	
 	
 	return true
 }
