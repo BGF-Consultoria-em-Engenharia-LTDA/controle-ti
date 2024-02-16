@@ -1,13 +1,15 @@
 {
   "tasks": {
-    "dev": "deno run --watch index.ts",
+    "dev": "deno run --allow-read --allow-env --allow-net --watch index.ts",
     "build": "deno compile index.ts"
   },
   "imports": {
-    "hono": "https://deno.land/x/hono@v3.12.7/mod.ts",
-    "hono/middleware": "https://deno.land/x/hono@v3.12.7/middleware.ts",
-    "dotenv": "https://deno.land/std@0.213.0/dotenv/mod.ts",
-    "GoogleAPI": "https://deno.land/x/google_deno_integration/mod.ts",
-    "assertEquals": "https://deno.land/std@0.213.0/assert/mod.ts"
+    "hono": "https://deno.land/x/hono@v3.12.11/mod.ts",
+    "hono/middleware": "https://deno.land/x/hono@v3.12.11/middleware/pretty-json/index.ts",
+    "hono/factory": "https://deno.land/x/hono@v3.12.11/helper/factory/index.ts",
+    "hono/cors": "https://deno.land/x/hono@v3.12.11/middleware/cors/index.ts",
+    "dotenv": "https://deno.land/std@0.214.0/dotenv/mod.ts",
+    "googleAPI": "https://deno.land/x/google_deno_integration@v1.1/mod.ts",
+    "assertEquals": "https://deno.land/std@0.214.0/assert/mod.ts"
   }
 }
