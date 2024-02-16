@@ -1,4 +1,3 @@
-import type { Context } from 'https://deno.land/x/hono@v3.12.7/context.ts'
 import { createFactory } from 'hono/factory'
 import { SpreadsheetGet, SpreadsheetGetValueRanges } from '../types/sheet.ts'
 import { Card, CardData, RequestCall, RequestAction, Checklist, Checks, Call } from '../types/trello.ts'
@@ -7,7 +6,7 @@ import { get, post, put } from '../utils/http.ts'
 const factory = createFactory()
 
 // ENDPOINT /trello/cards/:id
-export const getTrelloCard = factory.createHandlers(async (c: Context) => {
+export const getTrelloCard = factory.createHandlers(async (c) => {
 	const Id = c.req.param('id')
 
 	const TrelloCard = await get(`https://api.trello.com/1/cards/${Id}?key=${Deno.env.get('TRELLO_APIKEY')}&token=${Deno.env.get('TRELLO_APITOKEN')}`)
@@ -17,7 +16,7 @@ export const getTrelloCard = factory.createHandlers(async (c: Context) => {
 })
 
 // ENDPOINT /trello/cards
-export const postTrelloCard = factory.createHandlers(async (c: Context) => {
+export const postTrelloCard = factory.createHandlers(async (c) => {
 	const Request: RequestCall = await c.req.json()
 	
 	const [CardData, Checklist] = createCardInfo(Request)
@@ -33,11 +32,11 @@ export const postTrelloCard = factory.createHandlers(async (c: Context) => {
 })
 
 // ENDPOINT /trello/actions
-export const headTrelloAction = factory.createHandlers((c: Context) => {
+export const headTrelloAction = factory.createHandlers((c) => {
 	return c.text('Webhook connected successfully!', 200)
 })
 
-export const postTrelloAction = factory.createHandlers(async (c: Context)=> {
+export const postTrelloAction = factory.createHandlers(async (c)=> {
 	const Request: RequestAction = await c.req.json()
 	if (Request.action.display.translationKey !== 'action_move_card_from_list_to_list') return c.text('Is not a card move in Trello', 406)
 	if (Request.action.data.listAfter.name !== 'Chamados Realizados') return c.text('Is not the right list', 400)
