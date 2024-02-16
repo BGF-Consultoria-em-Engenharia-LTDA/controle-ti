@@ -1,4 +1,3 @@
-import type { Context } from 'https://deno.land/x/hono@v3.12.7/context.ts'
 import { createFactory } from 'hono/factory'
 import { GoogleAPI } from 'googleAPI'
 import { SpreadsheetGet, SpreadsheetUpdate } from '../types/sheet.ts';
@@ -18,7 +17,7 @@ const GoogleApi = new GoogleAPI({
 })
 
 // ENDPOINT /sheet/:id
-export const getSheetRange = factory.createHandlers(async (c: Context) => {
+export const getSheetRange = factory.createHandlers(async (c) => {
     const SheetId = c.req.param('id')
     const CellsRange = c.req.query('cells_range')
     if (CellsRange === undefined) return c.text('Request is not the expected', 400)
@@ -30,7 +29,7 @@ export const getSheetRange = factory.createHandlers(async (c: Context) => {
 })
 
 // ENDPOINT /sheet/:id/cell?cell_range
-export const putSheetCell = factory.createHandlers(async (c: Context) => {
+export const putSheetCell = factory.createHandlers(async (c) => {
     const SheetId = c.req.param('id')
     const CellRange = c.req.query('cell_range')
     if (CellRange === undefined) return c.text('Request is not the expected', 400)
