@@ -89,7 +89,7 @@ function createCardInfo(callReq: RequestCall): [CardData, Checks] {
 	const Checklist: Checks = {name: 'Equipamentos', items: []}
 
 	if (Call.tablets.length > 0) Checklist.items.push(`${Call.tablets} tablets`)
-	if (Call.thermal.length > 0) Checklist.items.push(`${Call.thermal.reduce((acc, cur) => {return acc + parseInt(cur)}, 0)} termovisores`)
+	if (Call.thermal.length > 0) Checklist.items.push(`${Call.thermal.reduce((acc, cur) => {return acc + parseInt(cur || '0')}, 0)} termovisores`)
 	if (Call.digital_measure.length > 0) Checklist.items.push(`${Call.digital_measure} trenas digital`)
 	Checklist.items.push(...Call.electric, ...Call.civil, ...Call.mechanic, ...Call.epi)
 
