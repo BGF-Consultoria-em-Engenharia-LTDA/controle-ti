@@ -47,7 +47,7 @@ export const postTrelloAction = factory.createHandlers(async (c)=> {
 
 	const Sheet = (CardDescription.startsWith('## Cliente:') ?
 		await get<SpreadsheetGet>(`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=M${Deno.env.get('SHEET_START_ROW')}:M${Deno.env.get('SHEET_END_ROW')}`) :
-		await get<SpreadsheetGet>(`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=AJ${Deno.env.get('SHEET_START_ROW')}:AJ${Deno.env.get('SHEET_END_ROW')}`))
+		await get<SpreadsheetGet>(`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=AL${Deno.env.get('SHEET_START_ROW')}:AJ${Deno.env.get('SHEET_END_ROW')}`))
 
 	if (Sheet.status !== 200) return c.text('Can not get the calls sheet', 502)
 	
@@ -55,7 +55,7 @@ export const postTrelloAction = factory.createHandlers(async (c)=> {
 	if (RowNumber === null) return c.text('Call not found', 404)
 
 	const updatedCell = await put(
-		`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}/cell?cell_range=AL${parseInt(Deno.env.get('SHEET_START_ROW')!) + RowNumber!}`,
+		`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}/cell?cell_range=AN${parseInt(Deno.env.get('SHEET_START_ROW')!) + RowNumber!}`,
 		{ value: 'Concluído' }
 	)
 	if (updatedCell.status !== 200) return c.text('Can not update the calls sheet', 502)
