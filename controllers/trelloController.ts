@@ -47,7 +47,7 @@ export const postTrelloAction = factory.createHandlers(async (c)=> {
 
 	const Sheet = (CardDescription.startsWith('## Cliente:') ?
 		await get<SpreadsheetGet>(`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=M${Deno.env.get('SHEET_START_ROW')}:M${Deno.env.get('SHEET_END_ROW')}`) :
-		await get<SpreadsheetGet>(`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=AL${Deno.env.get('SHEET_START_ROW')}:AJ${Deno.env.get('SHEET_END_ROW')}`))
+		await get<SpreadsheetGet>(`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=AL${Deno.env.get('SHEET_START_ROW')}:AL${Deno.env.get('SHEET_END_ROW')}`))
 
 	if (Sheet.status !== 200) return c.text('Can not get the calls sheet', 502)
 	
@@ -147,6 +147,7 @@ async function createChecklist(cardId: string, checks: Checks): Promise<void> {
 }
 
 function findRowByDescription(sheet: SpreadsheetGetValueRanges, desc: string): number|null {
+	console.log(desc)
 	const Description = desc.startsWith('## Cliente:') ? desc.slice(14).split('*')[0] : desc.slice(3).split('\n')[0]
 	let i: number|null = null
  	for (const [index, row] of sheet.values.entries()) {
