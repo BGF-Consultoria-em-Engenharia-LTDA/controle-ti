@@ -26,7 +26,10 @@ export const postTrelloCard = factory.createHandlers(async (c) => {
 	)
 	if (TrelloCard.status !== 200) return c.text('Request is not the expected', 400)
 
-	if (Request["Tipo do problema/solicitação"] === 'Solicitação de equipamento para auditoria') createChecklist(TrelloCard.parsedBody!.id, Checklist)
+	if (Request['Tipo do problema/solicitação'] === 'Solicitação de equipamento para auditoria' ||
+		Request['Tipo do problema/solicitação'] === 'Solicitação de equipamentos TI') {
+		createChecklist(TrelloCard.parsedBody!.id, Checklist)
+	}
 	
 	return c.json(TrelloCard, 201)
 })
@@ -78,6 +81,7 @@ function createCardInfo(callReq: RequestCall): [CardData, Checks] {
 		mechanic: callReq['Mecânica'] || [],
 		epi: callReq['EPI\'S'] || [],
 		date: callReq['Data e hora da Retirada'] || '',
+		equipments: callReq['O que deseja?'] || [],
 		description: callReq['Descrição:'] || ''
 	}
 	
@@ -91,14 +95,26 @@ function createCardInfo(callReq: RequestCall): [CardData, Checks] {
 	if (Call.tablets.length > 0) Checklist.items.push(`${Call.tablets} tablets`)
 	if (Call.thermal.length > 0) Checklist.items.push(`${Call.thermal.reduce((acc, cur) => {return acc + parseInt(cur || '0')}, 0)} termovisores`)
 	if (Call.digital_measure.length > 0) Checklist.items.push(`${Call.digital_measure} trenas digital`)
-	Checklist.items.push(...Call.electric, ...Call.civil, ...Call.mechanic, ...Call.epi)
-
+	Checklist.items.push(...Call.electric, ...Call.civil, ...Call.mechanic, ...Call.epi, ...Call.equipments)
 	console.info(
 		'Generating Checklist\n',
 		JSON.stringify(Checklist)
 	)
 
-	if (Call.problem !== 'Solicitação de equipamento para auditoria') {
+	if (Call.problem === 'Solicitação de equipamentos TI') {
+		return [{
+			idList: Deno.env.get('TRELLO_IDLIST') || '',
+			name: `${Call.employee} - ${Call.problem}`,
+			desc:
+				`## ${Call.description}\n---\n` +
+				`**Funcionário:** ${Call.employee}\n` +
+				`**Tipo de problema:** ${Call.problem}\n` +
+				`**Prioridade:** ${Call.priority}\n` +
+				`**Local:** ${Call.place}\n` +
+				`> *Arthur automatizações vrum vrum*`,
+			due: new Date(Date.now() + 60 * 60 * 1000).toISOString()
+		}, Checklist]
+	}else if (Call.problem !== 'Solicitação de equipamento para auditoria') {
 		return [{
 			idList: Deno.env.get('TRELLO_IDLIST') || '',
 			name: `${Call.employee} - ${Call.problem}`,

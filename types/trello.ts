@@ -88,6 +88,7 @@ export interface RequestCall {
 	'Mecânica'?: Array<string>,
 	'EPI\'S'?: Array<string>,
 	'Data e hora da Retirada'?: string, // date in string
+	'O que deseja?': Array<string>,
 	'Descrição:'?: string
 }
 
@@ -271,5 +272,6 @@ export interface Call {
 	mechanic: Array<string>,
 	epi: Array<string>,
 	date: string|Date,
+	equipments: Array<string>,
 	description: string
 }
