@@ -1,7 +1,8 @@
 import { createFactory } from 'hono/factory'
 import { BatchGetValuesResponse, ValueRange } from 'sheets'
 import { Card, CardData, RequestCall, RequestAction, Checklist, Checks, Call } from '../types/trello.ts'
-import { get, post, put } from '../utils/http.ts'
+import { get, post } from '../utils/http.ts'
+import { app } from "../index.ts";
 
 const factory = createFactory()
 
@@ -48,18 +49,22 @@ export const postTrelloAction = factory.createHandlers(async (c)=> {
 	if (CardTrello.parsedBody === undefined) return c.text('Can not find Trello Card', 500)
 	const CardDescription = CardTrello.parsedBody!.desc
 
-	const Sheet = (CardDescription.startsWith('## Cliente:') ?
-		await get<BatchGetValuesResponse>(`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=M${Deno.env.get('SHEET_START_ROW')}:M${Deno.env.get('SHEET_END_ROW')}`) :
-		await get<BatchGetValuesResponse>(`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=AL${Deno.env.get('SHEET_START_ROW')}:AL${Deno.env.get('SHEET_END_ROW')}`))
-
-	if (Sheet.status !== 200) return c.text('Can not get the calls sheet', 502)
+	const sheetReq = ( CardDescription.startsWith('## Cliente:') ?
+		await app.request(`/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=M${Deno.env.get('SHEET_START_ROW')}:M${Deno.env.get('SHEET_END_ROW')}`) :
+		await app.request(`/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=AL${Deno.env.get('SHEET_START_ROW')}:AL${Deno.env.get('SHEET_END_ROW')}`)
+	)
+	if (sheetReq.status !== 200) return c.text('Can not get the calls sheet', 502)
+	const Sheet: BatchGetValuesResponse = await sheetReq.json()
 	
-	const RowNumber = findRowByDescription(Sheet.parsedBody!.valueRanges![0], CardDescription)
+	const RowNumber = findRowByDescription(Sheet.valueRanges![0], CardDescription)
 	if (RowNumber === null) return c.text('Call not found', 404)
 
-	const updatedCell = await put(
-		`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}/cell?cell_range=AN${parseInt(Deno.env.get('SHEET_START_ROW')!) + RowNumber!}`,
-		{ value: 'Concluído' }
+	const updatedCell = await app.request(
+		`/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}/cell?cell_range=AN${parseInt(Deno.env.get('SHEET_START_ROW')!) + RowNumber!}`,
+		{ 
+			method: 'post', 
+			body: "{value: 'Concluído'}"
+		}
 	)
 	if (updatedCell.status !== 200) return c.text('Can not update the calls sheet', 502)
 

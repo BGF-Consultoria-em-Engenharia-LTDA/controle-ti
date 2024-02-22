@@ -1,6 +1,7 @@
 {
   "version": "3",
   "redirects": {
+    "https://deno.land/x/dotenv/load.ts": "https://deno.land/x/dotenv@v3.2.2/load.ts",
     "https://deno.land/x/google_deno_integration/mod.ts": "https://deno.land/x/google_deno_integration@v1.1/mod.ts",
     "https://deno.land/x/hono/middleware.ts": "https://deno.land/x/hono@v3.12.7/middleware.ts"
   },
@@ -8,9 +9,13 @@
     "https://deno.land/std@0.213.0/dotenv/mod.ts": "46cc7a78cf3f7ba533c8c9b90407a365f925be332ebdc867a1f502614e3d8523",
     "https://deno.land/std@0.213.0/dotenv/parse.ts": "55d5d1a5ba76c1324e6dc2f2f7917f03c47e5da5c2c55af11fd0fe2d6a3d3a2e",
     "https://deno.land/std@0.213.0/dotenv/stringify.ts": "0047ad7068289735d08964046aea267a750c141b494ca0e38831b89be6c020c2",
+    "https://deno.land/std@0.214.0/dotenv/load.ts": "587b342f0f6a3df071331fe6ba1c823729ab68f7d53805809475e486dd4161d7",
     "https://deno.land/std@0.214.0/dotenv/mod.ts": "0fcdf815a78d6f5bc70de92599fef80bc174da708492c4ed50b87ea480a56baa",
     "https://deno.land/std@0.214.0/dotenv/parse.ts": "55d5d1a5ba76c1324e6dc2f2f7917f03c47e5da5c2c55af11fd0fe2d6a3d3a2e",
     "https://deno.land/std@0.214.0/dotenv/stringify.ts": "0047ad7068289735d08964046aea267a750c141b494ca0e38831b89be6c020c2",
+    "https://deno.land/x/dotenv@v3.2.2/load.ts": "cbd76a0aee01aad8d09222afaa1dd04b84d9d3e44637503b01bf77a91df9e041",
+    "https://deno.land/x/dotenv@v3.2.2/mod.ts": "077b48773de9205266a0b44c3c3a3c3083449ed64bb0b6cc461b95720678d38e",
+    "https://deno.land/x/dotenv@v3.2.2/util.ts": "693730877b13f8ead2b79b2aa31e2a0652862f7dc0c5f6d2f313f4d39c7b7670",
     "https://deno.land/x/google_deno_integration@v1.1/deps.ts": "7a60eb9848416e142dc30526982cb831d686f2c51cc151b1cb6a669c4722a6f6",
     "https://deno.land/x/google_deno_integration@v1.1/google_api.ts": "d9c4991e4247c1df630d05e92508118a0fba526759c3280598561eae9652921c",
     "https://deno.land/x/google_deno_integration@v1.1/google_auth.ts": "9a5181dbf30a2726ff438a948b7e7f83e467b6b70313fe9e4f159b1598ab7e66",
