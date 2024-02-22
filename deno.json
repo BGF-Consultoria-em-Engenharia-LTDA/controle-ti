@@ -9,7 +9,7 @@
     "hono/factory": "https://deno.land/x/hono@v3.12.11/helper/factory/index.ts",
     "hono/cors": "https://deno.land/x/hono@v3.12.11/middleware/cors/index.ts",
     "sheets": "https://googleapis.deno.dev/v1/sheets:v4.ts",
-    "dotenv": "https://deno.land/std@0.214.0/dotenv/mod.ts",
+    "dotenv": "https://deno.land/std@0.214.0/dotenv/load.ts",
     "assertEquals": "https://deno.land/std@0.214.0/assert/mod.ts"
   }
 }
