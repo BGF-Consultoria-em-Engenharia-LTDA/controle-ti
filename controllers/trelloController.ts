@@ -163,7 +163,6 @@ async function createChecklist(cardId: string, checks: Checks): Promise<void> {
 }
 
 function findRowByDescription(sheet: ValueRange, desc: string): number|null {
-	console.log(sheet)
 	const Description = desc.startsWith('## Cliente:') ? desc.slice(14).split('*')[0] : desc.slice(3).split('\n')[0]
 	let i: number|null = null
  	for (const [index, row] of sheet!.values!.entries()) {
