@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory'
-import { SpreadsheetGet, SpreadsheetGetValueRanges } from '../types/sheet.ts'
+import { BatchGetValuesResponse, ValueRange } from 'sheets'
 import { Card, CardData, RequestCall, RequestAction, Checklist, Checks, Call } from '../types/trello.ts'
 import { get, post, put } from '../utils/http.ts'
 
@@ -49,12 +49,12 @@ export const postTrelloAction = factory.createHandlers(async (c)=> {
 	const CardDescription = CardTrello.parsedBody!.desc
 
 	const Sheet = (CardDescription.startsWith('## Cliente:') ?
-		await get<SpreadsheetGet>(`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=M${Deno.env.get('SHEET_START_ROW')}:M${Deno.env.get('SHEET_END_ROW')}`) :
-		await get<SpreadsheetGet>(`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=AL${Deno.env.get('SHEET_START_ROW')}:AL${Deno.env.get('SHEET_END_ROW')}`))
+		await get<BatchGetValuesResponse>(`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=M${Deno.env.get('SHEET_START_ROW')}:M${Deno.env.get('SHEET_END_ROW')}`) :
+		await get<BatchGetValuesResponse>(`${Deno.env.get('BASE_URL')}/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}?cells_range=AL${Deno.env.get('SHEET_START_ROW')}:AL${Deno.env.get('SHEET_END_ROW')}`))
 
 	if (Sheet.status !== 200) return c.text('Can not get the calls sheet', 502)
 	
-	const RowNumber = findRowByDescription(Sheet.parsedBody!.valueRanges[0], CardDescription)
+	const RowNumber = findRowByDescription(Sheet.parsedBody!.valueRanges![0], CardDescription)
 	if (RowNumber === null) return c.text('Call not found', 404)
 
 	const updatedCell = await put(
@@ -162,11 +162,10 @@ async function createChecklist(cardId: string, checks: Checks): Promise<void> {
 	}
 }
 
-function findRowByDescription(sheet: SpreadsheetGetValueRanges, desc: string): number|null {
-	console.log(desc)
+function findRowByDescription(sheet: ValueRange, desc: string): number|null {
 	const Description = desc.startsWith('## Cliente:') ? desc.slice(14).split('*')[0] : desc.slice(3).split('\n')[0]
 	let i: number|null = null
- 	for (const [index, row] of sheet.values.entries()) {
+ 	for (const [index, row] of sheet!.values!.entries()) {
 		if (row[0] === Description) {
 			i = index
 			break
