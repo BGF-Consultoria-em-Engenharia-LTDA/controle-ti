@@ -1,7 +1,7 @@
 import { createFactory } from 'hono/factory'
 import { BatchGetValuesResponse, ValueRange } from 'sheets'
 import { Card, CardData, RequestCall, RequestAction, Checklist, Checks, Call } from '../types/trello.ts'
-import { get, post } from '../utils/http.ts'
+import { HttpResponse, get, post } from '../utils/http.ts'
 import { app } from "../index.ts";
 
 const factory = createFactory()
@@ -45,8 +45,9 @@ export const postTrelloAction = factory.createHandlers(async (c)=> {
 	if (Request.action.display.translationKey !== 'action_move_card_from_list_to_list') return c.text('Is not a card move in Trello', 406)
 	if (Request.action.data.listAfter.name !== 'Chamados Realizados') return c.text('Is not the right list', 400)
 	
-	const CardTrello = await get<Card>(`${Deno.env.get('BASE_URL')}/trello/cards/${Request.action.display.entities.card.id}`)
-	if (CardTrello.parsedBody === undefined) return c.text('Can not find Trello Card', 500)
+	const CardReq = await app.request(`/trello/cards/${Request.action.display.entities.card.id}`)
+	if (CardReq.status !== 200) return c.text('Can not find Trello Card', 500)
+	const CardTrello: HttpResponse<CardData> = await CardReq.json()
 	const CardDescription = CardTrello.parsedBody!.desc
 
 	const sheetReq = ( CardDescription.startsWith('## Cliente:') ?
@@ -58,12 +59,12 @@ export const postTrelloAction = factory.createHandlers(async (c)=> {
 	
 	const RowNumber = findRowByDescription(Sheet.valueRanges![0], CardDescription)
 	if (RowNumber === null) return c.text('Call not found', 404)
-
+	
 	const updatedCell = await app.request(
 		`/sheet/${Deno.env.get('SPREADSHEET_CALLS_ID')}/cell?cell_range=AN${parseInt(Deno.env.get('SHEET_START_ROW')!) + RowNumber!}`,
 		{ 
-			method: 'post', 
-			body: "{value: 'Concluído'}"
+			method: 'put', 
+			body: JSON.stringify({value: 'Concluído'})
 		}
 	)
 	if (updatedCell.status !== 200) return c.text('Can not update the calls sheet', 502)
