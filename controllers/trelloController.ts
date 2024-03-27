@@ -1,6 +1,6 @@
 import { createFactory } from 'hono/factory'
 import { BatchGetValuesResponse, ValueRange } from 'sheets'
-import { Card, CardData, RequestCall, RequestAction, Checklist, Checks, Call } from '../types/trello.ts'
+import { Card, CardData, RequestCall, Checklist, Checks, Call } from '../types/trello.ts'
 import { HttpResponse, get, post } from '../utils/http.ts'
 import { app } from "../index.ts";
 
@@ -41,11 +41,9 @@ export const headTrelloAction = factory.createHandlers((c) => {
 })
 
 export const postTrelloAction = factory.createHandlers(async (c)=> {
-	const Request: RequestAction = await c.req.json()
-	if (Request.action.display.translationKey !== 'action_move_card_from_list_to_list') return c.text('Is not a card move in Trello', 406)
-	if (Request.action.data.listAfter.name !== 'Chamados Realizados') return c.text('Is not the right list', 400)
+	const Request = await c.req.json()
 	
-	const CardReq = await app.request(`/trello/cards/${Request.action.display.entities.card.id}`)
+	const CardReq = await app.request(`/trello/cards/${Request.CardID}`)
 	if (CardReq.status !== 200) return c.text('Can not find Trello Card', 500)
 	const CardTrello: HttpResponse<CardData> = await CardReq.json()
 	const CardDescription = CardTrello.parsedBody!.desc
