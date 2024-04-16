@@ -139,7 +139,7 @@ function createCardInfo(callReq: RequestCall): [CardData, Checks] {
 		desc:
 			`## Cliente: **${Call.client}**\n---\n` +
 			`**Tablets:** ${Call.tablets[0] || 0}\n` +
-			`**Termovisores:** ${Call.thermal.reduce((acc, cur) => {return acc + parseInt(cur)}, 0)}\n` +
+			`**Termovisores:** ${Call.thermal.reduce((acc, cur) => {return acc + parseInt(cur || '0')}, 0)}\n` +
 			`**Trena Digital:** ${Call.digital_measure[0] || 0}\n` +
 			`**Elétrica:**\n${Call.electric.map((item: string) => " " + item)}\n` +
 			`**Civil:**\n${Call.civil.map((item: string) => " " + item)}\n` +
