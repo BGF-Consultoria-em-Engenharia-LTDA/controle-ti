@@ -1,8 +1,8 @@
+import '@std/dotenv/load'
 import { Hono } from 'hono'
 import { prettyJSON } from 'hono/middleware'
 import { cors } from 'hono/cors'
 import routes from './routes/routes.ts'
-import 'dotenv'
 
 export const app = new Hono()
 app.use('*', prettyJSON())
