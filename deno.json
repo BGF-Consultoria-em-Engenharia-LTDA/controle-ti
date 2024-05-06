@@ -4,12 +4,12 @@
     "build": "deno compile index.ts"
   },
   "imports": {
-    "@std/dotenv": "jsr:@std/dotenv@^0.223.0",
-    "assertEquals": "https://deno.land/std@0.214.0/assert/mod.ts",
-    "hono": "https://deno.land/x/hono@v3.12.11/mod.ts",
-    "hono/cors": "https://deno.land/x/hono@v3.12.11/middleware/cors/index.ts",
-    "hono/factory": "https://deno.land/x/hono@v3.12.11/helper/factory/index.ts",
-    "hono/middleware": "https://deno.land/x/hono@v3.12.11/middleware/pretty-json/index.ts",
+    "@std/dotenv": "jsr:@std/dotenv",
+    "assertEquals": "jsr:@std/assert",
+    "hono": "https://deno.land/x/hono@v4.2.8/mod.ts",
+    "hono/cors": "https://deno.land/x/hono@v4.2.8/middleware/cors/index.ts",
+    "hono/middleware": "https://deno.land/x/hono/middleware.ts",
+    "hono/factory": "https://deno.land/x/hono@v4.2.8/helper/factory/index.ts",
     "sheets": "https://googleapis.deno.dev/v1/sheets:v4.ts"
   }
 }
