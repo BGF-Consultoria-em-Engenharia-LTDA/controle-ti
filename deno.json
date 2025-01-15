@@ -6,10 +6,16 @@
   "imports": {
     "@std/dotenv": "jsr:@std/dotenv",
     "assertEquals": "jsr:@std/assert",
-    "hono": "https://deno.land/x/hono@v4.2.8/mod.ts",
-    "hono/cors": "https://deno.land/x/hono@v4.2.8/middleware/cors/index.ts",
-    "hono/middleware": "https://deno.land/x/hono/middleware.ts",
-    "hono/factory": "https://deno.land/x/hono@v4.2.8/helper/factory/index.ts",
-    "sheets": "https://googleapis.deno.dev/v1/sheets:v4.ts"
-  }
+    "hono": "jsr:@hono/hono",
+    "google-spreadsheet": "npm:google-spreadsheet",
+    "google-auth": "npm:google-auth-library",
+    "trello.js": "npm:trello.js@^1.2.7"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx"
+  },
+  "unstable": [
+    "sloppy-imports"
+  ]
 }

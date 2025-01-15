@@ -1,7 +1,7 @@
 import { Routes } from '../types/routes.ts';
-import { getStock, getItem, getCollaborators } from "../controllers/stockController.tsx";
+import { getStock, getItem, getCollaborators } from "../controllers/stockController.ts";
 
-const Routes: Routes[] = [
+const StockRoutes: Routes[] = [
   {
     path: '/stock',
     method: 'get',
@@ -19,4 +19,4 @@ const Routes: Routes[] = [
   }
 ]
 
-export default Routes
+export default StockRoutes

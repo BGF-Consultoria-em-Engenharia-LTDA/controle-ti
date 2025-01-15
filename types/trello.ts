@@ -116,14 +116,14 @@ export interface Call {
 	priority: Priority,
 	place: string,
 	client: string,
-	tablets: Array<string|number>,
+	tablets: Array<string | number>,
 	thermal: Array<string>,
-	digital_measure: Array<string|number>,
+	digital_measure: Array<string | number>,
 	electric: Array<string>,
 	civil: Array<string>,
 	mechanic: Array<string>,
 	epi: Array<string>,
-	date: string|Date,
+	date: string | Date,
 	equipments: Array<string>,
 	description: string
 }

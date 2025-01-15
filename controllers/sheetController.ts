@@ -1,52 +1,55 @@
 import { createFactory } from 'hono/factory'
 import { Sheet } from '../utils/sheets.ts'
-import { BatchGetValuesResponse } from "sheets";
-
 
 const factory = createFactory();
 
-// ENDPOINT /sheet/:id
+// ENDPOINT /sheet/:id?start_row&sheet_name
 export const getSheetRange = factory.createHandlers(async (c) => {
-    const SheetId = c.req.param('id')
-    const CellsRange = c.req.query('cells_range')
-    if (CellsRange === undefined) return c.text('Request is not the expected', 400)
-    let cells: BatchGetValuesResponse
+    const sheetId = c.req.param('id')
+    const startRow = Number(c.req.query('start_row') || 0)
+    const sheetName = c.req.query('sheet_name') || ''
 
-    console.info('Fetching: Calls spreadsheet')
     try {
-        cells = await Sheet.spreadsheetsValuesBatchGet(SheetId, { ranges: CellsRange })
+        await Sheet.initialize(sheetId);
+        const sheet = sheetName ? Sheet.instance.sheetsByTitle[sheetName] : Sheet.instance.sheetsByIndex[0];
+        if (sheetName === 'INVENTÁRIO') sheet.loadHeaderRow(2)
+        if (sheetName === 'COLABORADORES') sheet.loadHeaderRow(49)
+
+
+        // Load only the requested range
+        const rows = await sheet.getRows({
+            offset: startRow
+        }).then(rows => rows.map(row => row.toObject()));
+
+        return c.json(rows, 200)
     } catch (e) {
         console.error(e)
-        return c.text('Without permission to access the spreadsheet', 401)
+        return c.text('Error accessing spreadsheet', 401)
     }
-
-    return c.json(cells, 200)
 })
 
-// ENDPOINT /sheet/:id/cell?cell_range
+// ENDPOINT /sheet/:id/:cell?sheet_name
 export const putSheetCell = factory.createHandlers(async (c) => {
-    const SheetId = c.req.param('id')
-    const CellRange = c.req.query('cell_range')
-    if (CellRange === undefined) return c.text('Request is not the expected', 400)
-    
-    const Body = await c.req.json()
-    if (Body.value === undefined) return c.text('Request is not the expected', 400)
+    const sheetId = c.req.param('id')
+    const cell = c.req.param('cell')
+    const sheetName = c.req.query('sheet_name') || ''
 
-    console.info(
-        `Updating: ${CellRange}\n`,
-        `Value: ${Body.value}`
-    )
+    const body = await c.req.json()
+    if (body.value === undefined) return c.text('Request is not the expected', 400)
+
     try {
-        const _ChangedCell = await Sheet.spreadsheetsValuesBatchUpdate(SheetId, {
-            'data': [{
-                'values': [[Body.value]],
-                'range': CellRange
-            }], 'valueInputOption': 'USER_ENTERED'
-        })
+        await Sheet.initialize(sheetId);
+        const sheet = sheetName ? Sheet.instance.sheetsByTitle[sheetName] : Sheet.instance.sheetsByIndex[0];
+
+        // Update cell
+        await sheet.loadCells(cell)
+        const updatedCell = sheet.getCell(0, 0)
+        updatedCell.value = body.value
+        await sheet.saveUpdatedCells()
+
+        return c.text('Cell successfully updated', 200)
     } catch (e) {
         console.error(e)
-        return c.text('Without permission to access the spreadsheet', 401)
+        return c.text('Error updating spreadsheet', 401)
     }
-    
-    return c.text('Cell successfully updated', 200)
 })

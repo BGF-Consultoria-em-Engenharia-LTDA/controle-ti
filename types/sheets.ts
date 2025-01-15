@@ -1,0 +1,23 @@
+export type EquipmentRequest = {
+  "Carimbo de data/hora": string;
+  "Endereço de e-mail": string;
+  "Funcionário": string;
+  "Tipo do problema/solicitação": string;
+  "Prioridade": string;
+  "Onde você se encontra?": string;
+  "Cliente:": string;
+  "Tablets: [Quantidade]": number;
+  "Tablets: [A30s (Antigos)]": number;
+  "Tablets: [KZOOM]": number;
+  "Termovisores: [FLIR]": number;
+  "Termovisores: [TESTO ]": number;
+  "Termovisores: [FLUKE]": number;
+  "Trena Digital: [Quantidade]": number;
+  "Elétrica": string;
+  "Civil": string;
+  "Mecânica": string;
+  "EPI'S": string;
+  "Data e hora da Retirada": Date;
+  "O que deseja?": string;
+  "Descrição:": string;
+};

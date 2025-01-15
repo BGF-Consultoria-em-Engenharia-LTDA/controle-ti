@@ -1,7 +1,7 @@
 import { Routes } from '../types/routes.ts'
 import { getTrelloCard, postTrelloCard, headTrelloAction, postTrelloAction } from "../controllers/trelloController.ts"
 
-const Routes: Routes[] = [
+const TrelloRoutes: Routes[] = [
 	{
 		path: '/trello/cards/:id',
 		method: 'get',
@@ -24,4 +24,4 @@ const Routes: Routes[] = [
 	}
 ]
 
-export default Routes
+export default TrelloRoutes
