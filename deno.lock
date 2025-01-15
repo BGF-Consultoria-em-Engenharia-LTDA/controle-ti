@@ -3,7 +3,7 @@
   "specifiers": {
     "jsr:@hono/hono@*": "4.6.16",
     "jsr:@std/assert@*": "1.0.10",
-    "jsr:@std/dotenv@*": "0.223.0",
+    "jsr:@std/dotenv@~0.225.3": "0.225.3",
     "jsr:@std/internal@^1.0.5": "1.0.5",
     "npm:@types/node@*": "22.5.4",
     "npm:google-auth-library@*": "9.15.0",
@@ -20,8 +20,8 @@
         "jsr:@std/internal"
       ]
     },
-    "@std/dotenv@0.223.0": {
-      "integrity": "9ec65949815cb3dbf43ca082c0e299bcf528ff736fdb612db9274464059d49f4"
+    "@std/dotenv@0.225.3": {
+      "integrity": "a95e5b812c27b0854c52acbae215856d9cce9d4bbf774d938c51d212711e8d4a"
     },
     "@std/internal@1.0.5": {
       "integrity": "54a546004f769c1ac9e025abd15a76b6671ddc9687e2313b67376125650dc7ba"
@@ -432,7 +432,7 @@
     "dependencies": [
       "jsr:@hono/hono@*",
       "jsr:@std/assert@*",
-      "jsr:@std/dotenv@*",
+      "jsr:@std/dotenv@~0.225.3",
       "npm:google-auth-library@*",
       "npm:google-spreadsheet@*",
       "npm:trello.js@^1.2.7"
